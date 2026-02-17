@@ -125,12 +125,12 @@ class Adherent:
 
 
 class Bibliotheque:
+    # initialisation de la classe bibliothèque 
     def __init__(self):
         self.livres = {}
         self.adherents = {}
-
-    # -------- SAUVEGARDE --------
-
+   
+# partie sauvegarde 
     def sauvegarder(self):
         data = {
             "livres": [livre.to_dict() for livre in self.livres.values()],
@@ -159,7 +159,7 @@ class Bibliotheque:
         except FileNotFoundError:
             print("Nouvelle bibliothèque créée.")
 
-    # -------- LIVRES --------
+# partie livre
 
     def ajouter_livre(self, isbn, titre, auteur, annee, editeur):
 
@@ -205,7 +205,7 @@ class Bibliotheque:
                 return livre
         return None
 
-    # -------- EMPRUNTS --------
+# partie emprunts
 
     def emprunter_livre(self, num_adherent, titre):
         adherent = self.adherents.get(num_adherent)
@@ -267,13 +267,13 @@ class Bibliotheque:
         self.sauvegarder()
 
 
-# -------- INITIALISATION --------
+# partie initialisation
 
 bibliotheque = Bibliotheque()
 bibliotheque.charger()
 
 
-# -------- MENUS --------
+# partie menus
 
 def menu_principal():
     while True:
@@ -320,7 +320,7 @@ def menu_utilisateur():
         elif choix == 4:
             break
 
-
+# affiche le panneau de contrôle de l'administrateur
 def menu_admin():
     while True:
         print("\n=== MENU ADMIN ===")
@@ -329,12 +329,14 @@ def menu_admin():
         print("3. Voir les livres")
         print("4. Retour")
 
+        # récupère le choix
         choix = input_int("Choix : ")
 
         if choix == 1:
-
+            # on utilise la fonction input_int pour vérifier si la valeur entrée est un entier
             annee = input_int("Année : ")
 
+            # on ajoute un livre à la bibliothèque 
             bibliotheque.ajouter_livre(
                 input("ISBN : "),
                 input("Titre : "),
@@ -344,12 +346,15 @@ def menu_admin():
             )
 
         elif choix == 2:
+            # demande l'identifiant (ISBN) et supprime l'exemplaire correspondant
             bibliotheque.retirer_livre(input("ISBN : "))
 
         elif choix == 3:
+            # affiche la liste de tous les livres disponibles
             bibliotheque.afficher_livres()
 
         elif choix == 4:
+            # casse la boucle pour quitter le menu administrateur et revenir au menu principal
             break
 
 

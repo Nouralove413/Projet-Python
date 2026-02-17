@@ -24,16 +24,17 @@ def charger_admin():
         # on renvoit un mot de passe par défaut de secours
         return "admin125"
 
-# 
+# on appelle la fonction charger_admin et on stocke le mot de passe dans ADMIN_PASSWORD
 ADMIN_PASSWORD = charger_admin()
 
-
+# on vérifie si l'utilisateur est bien admin
 def est_admin():
+    # vérifie si le mot de passe entré par l'utilisateur est le bon
     mdp = input("Mot de passe administrateur : ")
     return mdp == ADMIN_PASSWORD
 
 
-# -------- CLASSES --------
+#partie classe
 
 class Livre:
     def __init__(self, isbn, titre, auteur, annee, editeur, nb_exemplaires=1):

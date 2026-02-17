@@ -53,7 +53,7 @@ class Livre:
             return True
         return False
 
-    # 
+    # diminue de 1 le stock
     def retirer(self):
         if self.nb_exemplaires > 0:
             self.nb_exemplaires -= 1
@@ -94,9 +94,12 @@ class Adherent:
             print("Limite d'emprunts atteinte.")
             return False
 
+        # demande à l'ordinateur la date et l'heure exacte
         date_emprunt = datetime.now()
+        # calcul de date, date ajourd'hui + 14 jours
         date_limite = date_emprunt + timedelta(days=14)
 
+        # enregistrement dans le dossier de l'adhérent
         self.livres_empruntes[livre.isbn] = {
             "date_emprunt": date_emprunt.strftime("%Y-%m-%d"),
             "date_limite": date_limite.strftime("%Y-%m-%d")
@@ -104,13 +107,14 @@ class Adherent:
 
         return True
 
-    # 
+    # retire le livre de la liste des livres empruntés par l'adhérent
     def rendre(self, livre):
         if livre.isbn in self.livres_empruntes:
             del self.livres_empruntes[livre.isbn]
             return True
         return False
 
+    # transforme les informations de l'adhérent en dictionnaire pour faciliter la sauvegarde en json
     def to_dict(self):
         return {
             "num_adherent": self.num_adherent,

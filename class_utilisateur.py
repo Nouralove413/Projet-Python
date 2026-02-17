@@ -54,5 +54,7 @@ class Emprunt:
         for isbn, livre in self.livres.items():
             if livre['titre'] == titre:
                 livre['nb exemplaires'] += 1 
-                print("Le livre a été rendu avec succès.") #affiche le message que si la condition est validée
-                break #casse la boucle 
+                #affiche le message que si la condition est validée
+                print("Le livre a été rendu avec succès.")
+                #casse la boucle  
+                break 

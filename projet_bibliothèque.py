@@ -131,24 +131,34 @@ class Bibliotheque:
         self.adherents = {}
    
 # partie sauvegarde 
+    # prend toutes les données en mémoire et les écrit dans un fichier JSON
     def sauvegarder(self):
+        # on créait un grand dictionnaire qui va contenir toutes nos données converties
         data = {
+            # on parcourt chaque livre on le transforme en dictionnaire (avec to_dict) et on le met dans une liste
             "livres": [livre.to_dict() for livre in self.livres.values()],
+            # pareil pour les adhérents
             "adherents": [adherent.to_dict() for adherent in self.adherents.values()]
         }
 
+        # on ouvre le fichier "bibliotheque.json" en mode écriture ("w" pour write)
         with open("bibliotheque.json", "w") as f:
             json.dump(data, f, indent=4)
 
+    # lit le fichier de sauvegarde au démarrage pour recréer tous les objets (livres et adhérents)
     def charger(self):
         try:
+            # on essaie d'ouvrir le fichier en mode lecture ("r" pour read)
             with open("bibliotheque.json", "r") as f:
+                # on lit le contenu et on le met dans la variable "data"
                 data = json.load(f)
 
+            # recrée les objets Livre
             for l in data["livres"]:
                 livre = Livre(**l)
                 self.livres[livre.isbn] = livre
 
+            # recrée les objets Adherent et restaure leurs emprunts
             for a in data["adherents"]:
                 adherent = Adherent(a["num_adherent"], a["nom"], a["prenom"])
                 adherent.livres_empruntes = a["livres_empruntes"]
@@ -156,11 +166,13 @@ class Bibliotheque:
 
             print("Bibliothèque chargée !")
 
+        # si c'est la toute première ouverture du programme (aucun fichier de sauvegarde n'existe)
         except FileNotFoundError:
             print("Nouvelle bibliothèque créée.")
 
 # partie livre
 
+    # ajoute un exemplaire si le livre existe déjà sinon crée une nouvelle fiche "produit"
     def ajouter_livre(self, isbn, titre, auteur, annee, editeur):
 
         if isbn in self.livres:
@@ -171,6 +183,7 @@ class Bibliotheque:
         print("Livre ajouté !")
         self.sauvegarder()
 
+    # supprime un exemplaire du stock et retire le livre du catalogue s'il n'en reste plus
     def retirer_livre(self, isbn):
 
         livre = self.livres.get(isbn)
@@ -191,6 +204,7 @@ class Bibliotheque:
         else:
             print("Impossible de retirer ce livre.")
 
+    # parcourt tout le catalogue pour afficher les titres et le nombre d'exemplaires restants
     def afficher_livres(self):
         if not self.livres:
             print("Aucun livre.")
@@ -199,6 +213,7 @@ class Bibliotheque:
         for livre in self.livres.values():
             print(f"{livre.titre} - {livre.auteur} | Exemplaires: {livre.nb_exemplaires}")
 
+    # cherche un livre par son titre (sans tenir compte des majuscules) pour faciliter l'emprunt
     def trouver_livre_par_titre(self, titre):
         for livre in self.livres.values():
             if livre.titre.lower() == titre.lower():
@@ -268,8 +283,9 @@ class Bibliotheque:
 
 
 # partie initialisation
-
+# on met la classe dans une variable
 bibliotheque = Bibliotheque()
+# on charge la bibliothèque
 bibliotheque.charger()
 
 
@@ -282,19 +298,24 @@ def menu_principal():
         print("2. Mode administrateur")
         print("3. Quitter")
 
+        # récupère le choix
         choix = input_int("Choix : ")
 
         if choix == 1:
+            # lance le menu classique pour emprunter ou rendre des livres
             menu_utilisateur()
 
         elif choix == 2:
+            # vérifie le mot de passe avant de donner accès au menu administrateur
             if est_admin():
                 menu_admin()
             else:
                 print("Mot de passe incorrect.")
 
         elif choix == 3:
+            # sauvegarde toutes les données dans le fichier JSON avant de fermer
             bibliotheque.sauvegarder()
+            # casse la boucle 
             break
 
 # affiche le panneau de contrôle de l'utilisateur
